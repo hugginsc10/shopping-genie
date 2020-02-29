@@ -18,8 +18,9 @@ soup = BeautifulSoup(content, 'html.parser')
 element = soup.find(TAG_NAME, QUERY)
 price_string = re.findall(r"\$\d+(?:\,\d+\.\d+)?", element.text)
 
-
-print(price_string[0])
+pattern = re.compile(r"(\d,\d\d\d\.\d\d)")
+match = pattern.search(price_string[0])
+print(match.group(1))
 
 
 
