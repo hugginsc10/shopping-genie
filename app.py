@@ -18,9 +18,13 @@ soup = BeautifulSoup(content, 'html.parser')
 element = soup.find(TAG_NAME, QUERY)
 price_string = re.findall(r"\$\d+(?:\,\d+\.\d+)?", element.text)
 
-pattern = re.compile(r"(\d,\d\d\d\.\d\d)")
+pattern = re.compile(r"(\d+,?\d*\.\d\d)")
 match = pattern.search(price_string[0])
-print(match.group(1))
+
+found_price = match.group(1)
+without_commas = found_price.replace(",", "")
+price = float(without_commas)
+print(price)
 
 
 
