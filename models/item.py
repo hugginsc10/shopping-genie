@@ -1,11 +1,12 @@
 from typing import Dict
-from common.database import Database
-import re
-import requests
-import uuid
 from bs4 import BeautifulSoup
+import requests
+import re
+import uuid
+from common.database import Database
 class Item:
   def __init__(self, url: str, tag_name: str, query: Dict, _id: str = None):
+    super().__init__()
     self.url = url
     self.tag_name = tag_name
     self.query = query
@@ -41,5 +42,5 @@ class Item:
       "query": self.query
     }
   
-  def save_to_mongo(self):
+  def save_to_mongo(self) -> None:
     Database.insert(self.collection, self.json())
