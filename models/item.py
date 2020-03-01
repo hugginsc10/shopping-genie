@@ -1,22 +1,24 @@
+from typing import Dict
+from common.database import Database
 import re
 import requests
+import uuid
 from bs4 import BeautifulSoup
-import random
-import math
-import os
-import sys
-import time
-
 class Item:
-  def __init__(self, url, tag_name, query):
+  def __init__(self, url: str, tag_name: str, query: Dict, _id: str = None):
     self.url = url
     self.tag_name = tag_name
     self.query = query
     self.price = None
-  def load_price(self):
-    header = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}
-    response = requests.get(self.url, headers=header, timeout=5)
+    self.collection = "items"
+    self._id = uuid.uuid4().hex
+    self.header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}
+ 
+  def __repr__(self):
+    return f"<Item {self.url}>"
+
+  def load_price(self) -> float:
+    response = requests.get(self.url, headers=self.header, timeout=5)
     content = response.content
     soup = BeautifulSoup(content, 'html.parser')
     element = soup.find(self.tag_name, self.query)
@@ -28,4 +30,16 @@ class Item:
     found_price = match.group(1)
     without_commas = found_price.replace(",", "")
     self.price = float(without_commas)
+
     return self.price
+
+  def json(self) -> Dict:
+    return {
+      "_id": self._id,
+      "url": self.url,
+      "tag_name": self.tag_name,
+      "query": self.query
+    }
+  
+  def save_to_mongo(self):
+    Database.insert(self.collection, self.json())
