@@ -41,12 +41,18 @@ class Item:
       "tag_name": self.tag_name,
       "query": self.query
     }
-    
-  @classmethod
-  def all(cls):
-    items_from_db = Database.find('items', {})
-    return [Item(**item) for item in items_from_db]
+
+ 
   def save_to_mongo(self) -> None:
     Database.insert(self.collection, self.json())
 
+  @classmethod
+  def find_by_id(cls, _id):
+    item_json = Database.find_one("items", {"_id": _id})
+    return cls(**item_json)
+    
+  @classmethod
+  def all(cls) -> List:
+    items_from_db = Database.find('items', {})
+    return [Item(**item) for item in items_from_db]
   
