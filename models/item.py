@@ -41,6 +41,7 @@ class Item:
       "tag_name": self.tag_name,
       "query": self.query
     }
+    
   @classmethod
   def all(cls):
     items_from_db = Database.find('items', {})

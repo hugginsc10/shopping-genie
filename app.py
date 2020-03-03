@@ -6,12 +6,16 @@ query = {'class': 'pricing-lib-price-7-2006-8 price-view-pb priceView-layout-lar
 
 ipad = Item(url, tag_name, query)
 ipad.save_to_mongo()
+
+
 price = ipad.load_price()
 print(price)
 
-#items_loaded = ipad
-#print(items_loaded)
-#print(items_loaded[0].load_price())
+items_loaded = Item.all()
+print(items_loaded)
+print(items_loaded[0].load_price())
+
+
 
 
 
